@@ -544,12 +544,6 @@
 //    Don't worry about order — cards are auto-sorted by price,
 //    highest first, and only the top 10 per set are shown.
 //
-//  WHERE TO GET IMAGE LINKS:
-//    Go to TCGPlayer (or the official One Piece card site),
-//    find the card, right-click its image, choose
-//    "Copy image address", paste that link between the "" marks.
-//    Must end in .jpg, .png, or .webp — Google Shopping thumbnail
-//    links will NOT work.
 //
 // ════════════════════════════════════════════════════════════
 
@@ -673,7 +667,7 @@ SETS.forEach((set, si) => {
       </div>
       <div class="set-stat">Top Bounty<strong>$${highest}</strong></div>
     </div>
-    <p class="set-subnote">Ranked by current TCGPlayer market price · ${sorted.length} cards shown</p>
+    <p class="set-subnote">Ranked by current market price · ${sorted.length} cards shown</p>
     <div class="card-grid">
       ${sorted.map((c, i) => renderCard(c, i)).join('')}
     </div>
