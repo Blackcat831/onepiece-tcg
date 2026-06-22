@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top 10 Bounties — One Piece TCG Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#EDE3D0;
+    --parchment-dim:#E2D5BB;
+    --ink:#1B1A23;
+    --ink-soft:#2C2A35;
+    --gold:#C8973D;
+    --gold-bright:#E0AE52;
+    --blood:#8B2E2E;
+    --teal:#3D6B66;
+    --line:rgba(27,26,35,0.16);
+    --shadow:rgba(27,26,35,0.25);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  body{
+    background:
+      radial-gradient(ellipse 1200px 600px at 50% -10%, rgba(200,151,61,0.10), transparent 60%),
+      var(--parchment);
+    background-image:
+      radial-gradient(ellipse 1200px 600px at 50% -10%, rgba(200,151,61,0.10), transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(27,26,35,0.025) 40px),
+      var(--parchment);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    position:relative;
+    padding:88px 24px 64px;
+    text-align:center;
+    border-bottom:3px solid var(--ink);
+    background:
+      linear-gradient(180deg, rgba(27,26,35,0.04), transparent 70%);
+  }
+
+  .hero::before{
+    content:"";
+    position:absolute; inset:14px;
+    border:1.5px solid var(--gold);
+    opacity:0.45;
+    pointer-events:none;
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--blood);
+    font-weight:600;
+    margin-bottom:18px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before, .eyebrow::after{
+    content:"";
+    width:28px; height:1px;
+    background:var(--blood);
+    opacity:0.5;
+  }
+
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight:900;
+    font-style:italic;
+    font-size:clamp(40px, 7vw, 84px);
+    line-height:0.95;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .hero h1 .accent{
+    color:var(--blood);
+    font-style:italic;
+  }
+
+  .hero-sub{
+    max-width:560px;
+    margin:22px auto 0;
+    font-size:16px;
+    line-height:1.6;
+    color:var(--ink-soft);
+  }
+
+  .hero-meta{
+    margin-top:36px;
+    display:flex;
+    justify-content:center;
+    gap:38px;
+    flex-wrap:wrap;
+  }
+  .hero-meta div{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:0.75;
+  }
+  .hero-meta strong{
+    display:block;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    letter-spacing:0;
+    margin-bottom:2px;
+  }
+
+  /* ===== SET NAV ===== */
+  .set-nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(237,227,208,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1.5px solid var(--ink);
+    padding:14px 20px;
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .set-nav::-webkit-scrollbar{display:none;}
+
+  .set-nav button{
+    flex:0 0 auto;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.04em;
+    padding:8px 16px;
+    border:1.5px solid var(--ink);
+    background:transparent;
+    color:var(--ink);
+    border-radius:100px;
+    cursor:pointer;
+    transition:all 0.2s ease;
+    white-space:nowrap;
+  }
+  .set-nav button:hover{
+    background:var(--ink);
+    color:var(--parchment);
+  }
+  .set-nav button.active{
+    background:var(--blood);
+    border-color:var(--blood);
+    color:var(--parchment);
+  }
+
+  /* ===== SET SECTION ===== */
+  .set-section{
+    padding:72px 24px 32px;
+    max-width:1280px;
+    margin:0 auto;
+    scroll-margin-top:78px;
+  }
+
+  .set-header{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-bottom:8px;
+    padding-bottom:18px;
+    border-bottom:2.5px solid var(--ink);
+  }
+
+  .set-title-block{
+    display:flex;
+    align-items:baseline;
+    gap:18px;
+  }
+
+  .set-code{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    background:var(--ink);
+    color:var(--gold-bright);
+    padding:5px 11px;
+  }
+
+  .set-title{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:clamp(26px, 4vw, 38px);
+    color:var(--ink);
+  }
+
+  .set-stat{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--teal);
+    text-align:right;
+  }
+  .set-stat strong{
+    display:block;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:20px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .set-subnote{
+    font-size:13px;
+    color:var(--ink-soft);
+    opacity:0.7;
+    margin:14px 0 34px;
+    font-style:italic;
+  }
+
+  /* ===== CARD GRID ===== */
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+    gap:18px;
+    margin-bottom:24px;
+  }
+
+  .bounty-card{
+    position:relative;
+    background:#FAF5E9;
+    border:1.5px solid var(--ink);
+    box-shadow:4px 4px 0 var(--shadow);
+    transition:transform 0.18s ease, box-shadow 0.18s ease;
+    cursor:default;
+  }
+  .bounty-card:hover{
+    transform:translate(-3px,-3px);
+    box-shadow:7px 7px 0 var(--shadow);
+  }
+
+  .rank-seal{
+    position:absolute;
+    top:-12px;
+    left:-12px;
+    width:42px; height:42px;
+    border-radius:50%;
+    background:var(--blood);
+    border:2px solid var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Fraunces', serif;
+    font-weight:900;
+    font-style:italic;
+    font-size:17px;
+    color:var(--parchment);
+    z-index:5;
+    box-shadow:2px 2px 0 var(--shadow);
+  }
+  .rank-seal.gold{ background:var(--gold); }
+  .rank-seal.silver{ background:#8A8A92; }
+  .rank-seal.bronze{ background:#A9672F; }
+
+  .card-image-wrap{
+    position:relative;
+    aspect-ratio:5/7;
+    background:
+      repeating-linear-gradient(135deg, rgba(27,26,35,0.05) 0 2px, transparent 2px 14px),
+      linear-gradient(160deg, #DCD0B4, #C9B98E);
+    border-bottom:1.5px solid var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .card-image-wrap.has-image{
+    cursor:zoom-in;
+  }
+  .card-image-wrap img{
+    width:100%; height:100%;
+    object-fit:cover;
+    transition:transform 0.3s ease;
+  }
+  .card-image-wrap.has-image:hover img{
+    transform:scale(1.06);
+  }
+  .zoom-hint{
+    position:absolute;
+    bottom:8px; right:8px;
+    width:26px; height:26px;
+    border-radius:50%;
+    background:rgba(27,26,35,0.78);
+    color:var(--parchment);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    opacity:0;
+    transform:translateY(4px);
+    transition:opacity 0.2s ease, transform 0.2s ease;
+    pointer-events:none;
+  }
+  .card-image-wrap.has-image:hover .zoom-hint{
+    opacity:1;
+    transform:translateY(0);
+  }
+  .card-image-placeholder{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:0.45;
+    text-align:center;
+    padding:0 16px;
+  }
+
+  .card-info{
+    padding:14px 14px 16px;
+  }
+
+  .card-name{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:14.5px;
+    line-height:1.25;
+    color:var(--ink);
+    margin-bottom:3px;
+    min-height:36px;
+  }
+
+  .card-meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    opacity:0.65;
+    margin-bottom:12px;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+  }
+
+  .card-price-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    padding-top:10px;
+    border-top:1px dashed var(--line);
+  }
+
+  .card-price{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:21px;
+    color:var(--ink);
+  }
+  .card-price .cents{
+    font-size:13px;
+    opacity:0.6;
+  }
+
+  .card-change{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    font-weight:600;
+    padding:3px 7px;
+    border-radius:3px;
+  }
+  .card-change.up{ color:#1F5C32; background:#D8EBD6; }
+  .card-change.down{ color:var(--blood); background:#F2DCDA; }
+  .card-change.flat{ color:var(--ink-soft); background:#E5DCC7; }
+
+  /* ===== FOOTER NOTE ===== */
+  .footer-note{
+    max-width:1280px;
+    margin:40px auto 90px;
+    padding:24px 24px 0;
+    border-top:1.5px solid var(--line);
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    opacity:0.55;
+    text-align:center;
+    letter-spacing:0.03em;
+  }
+
+  /* ===== LIGHTBOX ===== */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    background:rgba(27,26,35,0.92);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:40px 24px;
+    opacity:0;
+    transition:opacity 0.22s ease;
+  }
+  .lightbox.open{
+    display:flex;
+    opacity:1;
+  }
+  .lightbox-content{
+    position:relative;
+    max-width:520px;
+    width:100%;
+    transform:scale(0.96);
+    transition:transform 0.22s ease;
+  }
+  .lightbox.open .lightbox-content{
+    transform:scale(1);
+  }
+  .lightbox-content img{
+    width:100%;
+    height:auto;
+    display:block;
+    border:2px solid var(--gold);
+    box-shadow:0 18px 50px rgba(0,0,0,0.45);
+    background:var(--parchment-dim);
+  }
+  .lightbox-caption{
+    text-align:center;
+    margin-top:18px;
+  }
+  .lightbox-name{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:20px;
+    color:var(--parchment);
+  }
+  .lightbox-meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    margin-top:4px;
+  }
+  .lightbox-close{
+    position:absolute;
+    top:18px; right:18px;
+    width:40px; height:40px;
+    border-radius:50%;
+    border:1.5px solid rgba(237,227,208,0.4);
+    background:rgba(27,26,35,0.5);
+    color:var(--parchment);
+    font-size:16px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .lightbox-close:hover{
+    background:var(--blood);
+    transform:rotate(90deg);
+  }
+
+  @media (max-width:640px){
+    .hero{padding:64px 18px 44px;}
+    .hero-meta{gap:24px;}
+    .set-section{padding:52px 16px 16px;}
+    .card-grid{grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px;}
+    .card-name{font-size:13px; min-height:32px;}
+    .card-price{font-size:18px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .bounty-card{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="eyebrow">2026 Collection Ledger</div>
+    <h1>Top Ten <span class="accent">Bounties</span><br>per Set</h1>
+    <p class="hero-sub">The highest-value cards from every One Piece TCG set, ranked by current market price. Updated monthly, straight from the tracker.</p>
+    <div class="hero-meta">
+      <div><strong id="meta-sets">—</strong>Sets Tracked</div>
+      <div><strong id="meta-cards">—</strong>Cards Ranked</div>
+      <div><strong id="meta-updated">Jun 2026</strong>Last Updated</div>
+    </div>
+  </section>
+
+  <nav class="set-nav" id="setNav"></nav>
+
+  <main id="setSections"></main>
+
+  <div class="footer-note">
+    PRICES SOURCED FROM TCGPLAYER MARKET AVERAGE · ENTERED ON THE 15TH OF EACH MONTH · ⚓ ONE PIECE TCG PRICE TRACKER
+  </div>
+
+  <!-- LIGHTBOX — full-size image viewer, opens when a card image is clicked -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+    <div class="lightbox-content">
+      <img id="lightboxImg" src="" alt="">
+      <div class="lightbox-caption">
+        <div class="lightbox-name" id="lightboxName"></div>
+        <div class="lightbox-meta" id="lightboxMeta"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  HOW TO EDIT THIS PAGE — READ ME FIRST
+// ════════════════════════════════════════════════════════════
+//
+//  Everything you need to change lives in the SETS array below.
+//  You do NOT need to touch any code above this point.
+//
+//  Each SET looks like this:
+//
+//    {
+//      code: "OP-01",            <-- CHANGE SET CODE here
+//      name: "Romance Dawn",     <-- CHANGE SET NAME here
+//      cards: [ ...10 cards... ]
+//    }
+//
+//  Each CARD inside "cards" looks like this:
+//
+//    { name: "Monkey D. Luffy (Alt Art)",   <-- CHANGE CARD NAME here
+//      rarity: "Secret Rare",               <-- CHANGE RARITY here
+//      price: 550,                          <-- CHANGE CURRENT PRICE here (no $ sign, no commas)
+//      prevPrice: 500,                      <-- CHANGE LAST MONTH'S PRICE here (used for the up/down %)
+//      image: "" },                         <-- CHANGE IMAGE here (paste a direct .jpg/.png link between the quotes)
+//
+//  TO ADD A NEW SET:
+//    Copy one whole { code: ... cards: [...] } block, paste it
+//    before the closing "];", change the code/name/cards.
+//
+//  TO ADD/REMOVE A CARD:
+//    Copy or delete one whole { name: ... image: "" } line.
+//    Don't worry about order — cards are auto-sorted by price,
+//    highest first, and only the top 10 per set are shown.
+//
+//  WHERE TO GET IMAGE LINKS:
+//    Go to TCGPlayer (or the official One Piece card site),
+//    find the card, right-click its image, choose
+//    "Copy image address", paste that link between the "" marks.
+//    Must end in .jpg, .png, or .webp — Google Shopping thumbnail
+//    links will NOT work.
+//
+// ════════════════════════════════════════════════════════════
+
+const SETS = [
+
+  // ─────────────────────────────────────────────────────────
+  //  SET 1
+  // ─────────────────────────────────────────────────────────
+  {
+    code: "OP-01",              // ← set code
+    name: "Romance Dawn",       // ← set name
+    cards: [
+      // name ───────────────────────────  rarity ───────────  price  prevPrice  image
+      { name: "Monkey D. Luffy (Alt Art)", rarity: "Secret Rare", price: 550, prevPrice: 500, image: "https://dummyimage.com/400x560/C9B98E/1B1A23.png&text=Luffy+Alt+Art" },
+      { name: "Roronoa Zoro (Alt Art)",    rarity: "Secret Rare", price: 480, prevPrice: 510, image: "" },
+      { name: "Nami (Alt Art)",            rarity: "Secret Rare", price: 310, prevPrice: 290, image: "" },
+      { name: "Shanks (Alt Art)",          rarity: "Secret Rare", price: 275, prevPrice: 275, image: "" },
+      { name: "Sanji (Leader, Alt Art)",   rarity: "Secret Rare", price: 190, prevPrice: 175, image: "" },
+      { name: "Trafalgar Law (Leader)",    rarity: "Super Rare",  price: 140, prevPrice: 150, image: "" },
+      { name: "Nico Robin",                rarity: "Super Rare",  price: 95,  prevPrice: 88,  image: "" },
+      { name: "Tony Tony Chopper",         rarity: "Super Rare",  price: 62,  prevPrice: 60,  image: "" },
+      { name: "Usopp",                     rarity: "Rare",        price: 38,  prevPrice: 41,  image: "" },
+      { name: "Buggy the Clown",           rarity: "Rare",        price: 22,  prevPrice: 22,  image: "" },
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  SET 2
+  // ─────────────────────────────────────────────────────────
+  {
+    code: "OP-02",
+    name: "Paramount War",
+    cards: [
+      { name: "Kaido (Alt Art)",            rarity: "Secret Rare", price: 620, prevPrice: 580, image: "" },
+      { name: "Whitebeard (Alt Art)",       rarity: "Secret Rare", price: 590, prevPrice: 600, image: "" },
+      { name: "Big Mom (Alt Art)",          rarity: "Secret Rare", price: 410, prevPrice: 395, image: "" },
+      { name: "Portgas D. Ace (Leader)",    rarity: "Secret Rare", price: 350, prevPrice: 340, image: "" },
+      { name: "Marco the Phoenix",          rarity: "Super Rare",  price: 165, prevPrice: 158, image: "" },
+      { name: "Jinbe",                      rarity: "Super Rare",  price: 110, prevPrice: 112, image: "" },
+      { name: "Crocodile",                  rarity: "Super Rare",  price: 88,  prevPrice: 80,  image: "" },
+      { name: "Donquixote Doflamingo",      rarity: "Rare",        price: 54,  prevPrice: 50,  image: "" },
+      { name: "Smoker",                     rarity: "Rare",        price: 33,  prevPrice: 35,  image: "" },
+      { name: "Boa Hancock",                rarity: "Rare",        price: 28,  prevPrice: 26,  image: "" },
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  SET 3
+  // ─────────────────────────────────────────────────────────
+  {
+    code: "OP-03",
+    name: "Pillars of Strength",
+    cards: [
+      { name: "Trafalgar Law (Alt Art)",   rarity: "Secret Rare", price: 470, prevPrice: 450, image: "" },
+      { name: "Nico Robin (Alt Art)",      rarity: "Secret Rare", price: 380, prevPrice: 360, image: "" },
+      { name: "Charlotte Katakuri",        rarity: "Secret Rare", price: 260, prevPrice: 270, image: "" },
+      { name: "Eustass Kid",               rarity: "Super Rare",  price: 145, prevPrice: 140, image: "" },
+      { name: "Basil Hawkins",             rarity: "Super Rare",  price: 92,  prevPrice: 95,  image: "" },
+      { name: "X Drake",                   rarity: "Super Rare",  price: 70,  prevPrice: 65,  image: "" },
+      { name: "Killer",                    rarity: "Rare",        price: 45,  prevPrice: 44,  image: "" },
+      { name: "Bartolomeo",                rarity: "Rare",        price: 30,  prevPrice: 31,  image: "" },
+      { name: "Cavendish",                 rarity: "Rare",        price: 24,  prevPrice: 24,  image: "" },
+      { name: "Sabo",                      rarity: "Rare",        price: 19,  prevPrice: 18,  image: "" },
+    ]
+  },
+
+  // ─────────────────────────────────────────────────────────
+  //  TO ADD SET 4, copy this empty template below, fill it in,
+  //  and remove the /* */ comment markers around it:
+  // ─────────────────────────────────────────────────────────
+  /*
+  {
+    code: "OP-04",
+    name: "Kingdoms of Intrigue",
+    cards: [
+      { name: "Card Name Here", rarity: "Secret Rare", price: 0, prevPrice: 0, image: "" },
+    ]
+  },
+  */
+
+];
+
+// ════════════════════════════════════════════════════════════
+//  Nothing below this line needs to be touched.
+// ════════════════════════════════════════════════════════════
+
+// RENDER
+// ============================================================
+
+const nav = document.getElementById('setNav');
+const sections = document.getElementById('setSections');
+let totalCards = 0;
+
+SETS.forEach((set, si) => {
+  totalCards += set.cards.length;
+
+  // nav button
+  const btn = document.createElement('button');
+  btn.textContent = set.code;
+  btn.className = si === 0 ? 'active' : '';
+  btn.onclick = () => {
+    document.getElementById('set-' + set.code).scrollIntoView({behavior:'smooth'});
+    document.querySelectorAll('.set-nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  };
+  nav.appendChild(btn);
+
+  // section
+  const section = document.createElement('section');
+  section.className = 'set-section';
+  section.id = 'set-' + set.code;
+
+  const sorted = [...set.cards].sort((a,b) => b.price - a.price).slice(0,10);
+  const highest = sorted[0]?.price.toFixed(2) || '—';
+
+  section.innerHTML = `
+    <div class="set-header">
+      <div class="set-title-block">
+        <span class="set-code">${set.code}</span>
+        <h2 class="set-title">${set.name}</h2>
+      </div>
+      <div class="set-stat">Top Bounty<strong>$${highest}</strong></div>
+    </div>
+    <p class="set-subnote">Ranked by current TCGPlayer market price · ${sorted.length} cards shown</p>
+    <div class="card-grid">
+      ${sorted.map((c, i) => renderCard(c, i)).join('')}
+    </div>
+  `;
+
+  sections.appendChild(section);
+});
+
+function renderCard(c, i){
+  const rank = i + 1;
+  const sealClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+  const change = c.prevPrice ? ((c.price - c.prevPrice) / c.prevPrice) * 100 : 0;
+  const changeClass = change > 0.05 ? 'up' : change < -0.05 ? 'down' : 'flat';
+  const changeSign = change > 0 ? '+' : '';
+  const changeLabel = Math.abs(change) < 0.05 ? '— 0.0%' : `${changeSign}${change.toFixed(1)}%`;
+  const [dollars, cents] = c.price.toFixed(2).split('.');
+
+  // Escape quotes so names/rarities with apostrophes don't break the inline handler
+  const safeName = c.name.replace(/'/g, "\\'");
+  const safeRarity = c.rarity.replace(/'/g, "\\'");
+  const safeImage = (c.image || '').replace(/'/g, "\\'");
+
+  const hasImage = !!c.image;
+  const imageContent = hasImage
+    ? `<img src="${c.image}" alt="${c.name}" loading="lazy"><span class="zoom-hint">⤢</span>`
+    : `<div class="card-image-placeholder">Image<br>not yet added</div>`;
+
+  const clickAttr = hasImage
+    ? `onclick="openLightbox('${safeImage}', '${safeName}', '${safeRarity}')"`
+    : '';
+
+  return `
+    <div class="bounty-card">
+      <span class="rank-seal ${sealClass}">${rank}</span>
+      <div class="card-image-wrap ${hasImage ? 'has-image' : ''}" ${clickAttr}>${imageContent}</div>
+      <div class="card-info">
+        <div class="card-name">${c.name}</div>
+        <div class="card-meta">${c.rarity}</div>
+        <div class="card-price-row">
+          <div class="card-price">$${dollars}<span class="cents">.${cents}</span></div>
+          <div class="card-change ${changeClass}">${changeLabel}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+document.getElementById('meta-sets').textContent = SETS.length;
+document.getElementById('meta-cards').textContent = totalCards;
+
+// highlight nav on scroll
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const code = e.target.id.replace('set-','');
+      document.querySelectorAll('.set-nav button').forEach(b => {
+        b.classList.toggle('active', b.textContent === code);
+      });
+    }
+  });
+}, { rootMargin: '-100px 0px -70% 0px' });
+
+document.querySelectorAll('.set-section').forEach(s => obs.observe(s));
+
+// ════════════════════════════════════════════════════════════
+//  LIGHTBOX — click any card image to see it full-size
+// ════════════════════════════════════════════════════════════
+const lightbox     = document.getElementById('lightbox');
+const lightboxImg  = document.getElementById('lightboxImg');
+const lightboxName = document.getElementById('lightboxName');
+const lightboxMeta = document.getElementById('lightboxMeta');
+const lightboxClose= document.getElementById('lightboxClose');
+
+function openLightbox(imageUrl, name, rarity){
+  lightboxImg.src = imageUrl;
+  lightboxImg.alt = name;
+  lightboxName.textContent = name;
+  lightboxMeta.textContent = rarity;
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(){
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightbox) closeLightbox(); // click outside the image closes it
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
+
+</body>
+</html>
